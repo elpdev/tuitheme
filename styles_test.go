@@ -91,6 +91,47 @@ func TestPhosphorKeepsChromeAccent(t *testing.T) {
 	}
 }
 
+func TestThemeBrandAccents(t *testing.T) {
+	cases := map[string]string{
+		"Phosphor":             "#FFB347",
+		"Dracula":              "#BD93F9",
+		"Tokyo Night":          "#7AA2F7",
+		"Tokyo Night Storm":    "#7AA2F7",
+		"Catppuccin Mocha":     "#CBA6F7",
+		"Catppuccin Macchiato": "#C6A0F6",
+		"Nord":                 "#88C0D0",
+		"Gruvbox Dark":         "#FE8019",
+		"Gruvbox Light":        "#D65D0E",
+		"Kanagawa":             "#7E9CD8",
+		"Rose Pine":            "#EBBCBA",
+		"Rose Pine Moon":       "#EA9A97",
+		"Solarized Dark":       "#268BD2",
+		"Solarized Light":      "#268BD2",
+		"One Dark":             "#61AFEF",
+		"Everforest Dark":      "#A7C080",
+		"Monokai":              "#F92672",
+	}
+
+	themes := BuiltIns()
+	if len(themes) != len(cases) {
+		t.Fatalf("brand-accent table covers %d themes but BuiltIns has %d", len(cases), len(themes))
+	}
+
+	for _, theme := range themes {
+		want, ok := cases[theme.Name]
+		if !ok {
+			t.Fatalf("no canonical brand accent recorded for theme %q", theme.Name)
+		}
+		wantColor := lipgloss.Color(want)
+		if got := theme.Title.GetForeground(); fmt.Sprint(got) != fmt.Sprint(wantColor) {
+			t.Errorf("%s Title foreground: want %v, got %v", theme.Name, wantColor, got)
+		}
+		if got := theme.HeaderAccent.GetForeground(); fmt.Sprint(got) != fmt.Sprint(wantColor) {
+			t.Errorf("%s HeaderAccent foreground: want %v, got %v", theme.Name, wantColor, got)
+		}
+	}
+}
+
 func TestThemeConstructorsDefineCoreStyles(t *testing.T) {
 	for _, theme := range BuiltIns() {
 		if theme.Text.GetForeground() == nil {
