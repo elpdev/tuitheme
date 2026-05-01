@@ -2,13 +2,30 @@ package tuitheme
 
 import "testing"
 
-func TestBuiltInsIncludesPhosphor(t *testing.T) {
+func TestBuiltIns(t *testing.T) {
 	themes := BuiltIns()
-	if len(themes) != 1 {
-		t.Fatalf("expected one built-in theme, got %d", len(themes))
+	if len(themes) == 0 {
+		t.Fatal("expected built-in themes")
 	}
-	if themes[0].Name != "Phosphor" {
-		t.Fatalf("expected Phosphor, got %q", themes[0].Name)
+
+	seen := make(map[string]bool, len(themes))
+	for _, theme := range themes {
+		if theme.Name == "" {
+			t.Fatal("expected built-in theme to define a name")
+		}
+		if theme.Background == nil {
+			t.Fatalf("expected %s to define a background", theme.Name)
+		}
+		if seen[theme.Name] {
+			t.Fatalf("duplicate built-in theme name %q", theme.Name)
+		}
+		seen[theme.Name] = true
+	}
+
+	for _, name := range []string{"Phosphor", "Dracula", "Tokyo Night", "Catppuccin Mocha", "Nord", "Gruvbox Dark"} {
+		if !seen[name] {
+			t.Fatalf("expected built-ins to include %s", name)
+		}
 	}
 }
 
@@ -23,6 +40,14 @@ func TestByName(t *testing.T) {
 
 	if _, ok := ByName(BuiltIns(), "Missing"); ok {
 		t.Fatal("expected missing theme not to be found")
+	}
+
+	theme, ok = ByName(BuiltIns(), "Dracula")
+	if !ok {
+		t.Fatal("expected to find Dracula")
+	}
+	if theme.Name != "Dracula" {
+		t.Fatalf("expected Dracula, got %q", theme.Name)
 	}
 }
 
@@ -46,5 +71,25 @@ func TestNext(t *testing.T) {
 func TestPhosphorDefinesBackground(t *testing.T) {
 	if theme := Phosphor(); theme.Background == nil {
 		t.Fatal("expected Phosphor to define a background")
+	}
+}
+
+func TestThemeConstructorsDefineCoreStyles(t *testing.T) {
+	for _, theme := range BuiltIns() {
+		if theme.Text.GetForeground() == nil {
+			t.Fatalf("expected %s Text to define a foreground", theme.Name)
+		}
+		if theme.Accent.GetForeground() == nil {
+			t.Fatalf("expected %s Accent to define a foreground", theme.Name)
+		}
+		if theme.Success.GetForeground() == nil {
+			t.Fatalf("expected %s Success to define a foreground", theme.Name)
+		}
+		if theme.Warn.GetForeground() == nil {
+			t.Fatalf("expected %s Warn to define a foreground", theme.Name)
+		}
+		if theme.Error.GetForeground() == nil {
+			t.Fatalf("expected %s Error to define a foreground", theme.Name)
+		}
 	}
 }

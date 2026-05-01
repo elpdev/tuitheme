@@ -12,8 +12,10 @@ type Theme struct {
 
 	Text          lipgloss.Style
 	Muted         lipgloss.Style
+	Accent        lipgloss.Style
 	Title         lipgloss.Style
 	Selected      lipgloss.Style
+	Disabled      lipgloss.Style
 	Header        lipgloss.Style
 	HeaderAccent  lipgloss.Style
 	Sidebar       lipgloss.Style
@@ -22,12 +24,33 @@ type Theme struct {
 	Modal         lipgloss.Style
 	PaletteAccent lipgloss.Style
 	Border        lipgloss.Style
+	Focus         lipgloss.Style
 	Info          lipgloss.Style
+	Success       lipgloss.Style
 	Warn          lipgloss.Style
+	Error         lipgloss.Style
 }
 
 func BuiltIns() []Theme {
-	return []Theme{Phosphor()}
+	return []Theme{
+		Phosphor(),
+		Dracula(),
+		TokyoNight(),
+		TokyoNightStorm(),
+		CatppuccinMocha(),
+		CatppuccinMacchiato(),
+		Nord(),
+		GruvboxDark(),
+		GruvboxLight(),
+		Kanagawa(),
+		RosePine(),
+		RosePineMoon(),
+		SolarizedDark(),
+		SolarizedLight(),
+		OneDark(),
+		EverforestDark(),
+		Monokai(),
+	}
 }
 
 func ByName(themes []Theme, name string) (Theme, bool) {
