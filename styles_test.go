@@ -1,6 +1,11 @@
 package tuitheme
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+
+	"charm.land/lipgloss/v2"
+)
 
 func TestBuiltIns(t *testing.T) {
 	themes := BuiltIns()
@@ -71,6 +76,18 @@ func TestNext(t *testing.T) {
 func TestPhosphorDefinesBackground(t *testing.T) {
 	if theme := Phosphor(); theme.Background == nil {
 		t.Fatal("expected Phosphor to define a background")
+	}
+}
+
+func TestPhosphorKeepsChromeAccent(t *testing.T) {
+	theme := Phosphor()
+	want := lipgloss.Color("#FFB347")
+
+	if got := theme.Title.GetForeground(); fmt.Sprint(got) != fmt.Sprint(want) {
+		t.Fatalf("expected Phosphor Title foreground %v, got %v", want, got)
+	}
+	if got := theme.HeaderAccent.GetForeground(); fmt.Sprint(got) != fmt.Sprint(want) {
+		t.Fatalf("expected Phosphor HeaderAccent foreground %v, got %v", want, got)
 	}
 }
 

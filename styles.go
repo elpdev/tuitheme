@@ -16,6 +16,7 @@ type palette struct {
 	divider    color.Color
 	accent     color.Color
 	accentAlt  color.Color
+	chrome     color.Color
 	info       color.Color
 	success    color.Color
 	warn       color.Color
@@ -23,17 +24,22 @@ type palette struct {
 }
 
 func newTheme(p palette) Theme {
+	chrome := p.accent
+	if p.chrome != nil {
+		chrome = p.chrome
+	}
+
 	return Theme{
 		Name:          p.name,
 		Background:    p.bg,
 		Text:          lipgloss.NewStyle().Foreground(p.fg).Background(p.bg),
 		Muted:         lipgloss.NewStyle().Foreground(p.muted).Background(p.bg),
 		Accent:        lipgloss.NewStyle().Foreground(p.accent).Background(p.bg).Bold(true),
-		Title:         lipgloss.NewStyle().Bold(true).Foreground(p.accent).Background(p.bg),
+		Title:         lipgloss.NewStyle().Bold(true).Foreground(chrome).Background(p.bg),
 		Selected:      lipgloss.NewStyle().Bold(true).Foreground(p.fg).Background(p.selected),
 		Disabled:      lipgloss.NewStyle().Foreground(p.subtle).Background(p.bg),
 		Header:        lipgloss.NewStyle().Foreground(p.fg).Background(p.bg).Border(lipgloss.NormalBorder(), false, false, true, false).BorderForeground(p.divider).Padding(0, 1),
-		HeaderAccent:  lipgloss.NewStyle().Foreground(p.accent).Background(p.bg).Bold(true),
+		HeaderAccent:  lipgloss.NewStyle().Foreground(chrome).Background(p.bg).Bold(true),
 		Sidebar:       lipgloss.NewStyle().Background(p.bg).Border(lipgloss.NormalBorder(), false, true, false, false).BorderForeground(p.divider).Padding(1, 1),
 		Main:          lipgloss.NewStyle().Foreground(p.fg).Background(p.bg).Padding(1, 2),
 		Footer:        lipgloss.NewStyle().Foreground(p.subtle).Background(p.bg).Border(lipgloss.NormalBorder(), true, false, false, false).BorderForeground(p.divider).Padding(0, 1),
@@ -59,6 +65,7 @@ func Phosphor() Theme {
 		divider:    lipgloss.Color("#2A3752"),
 		accent:     lipgloss.Color("#6FD0E3"),
 		accentAlt:  lipgloss.Color("#FFB347"),
+		chrome:     lipgloss.Color("#FFB347"),
 		info:       lipgloss.Color("#6FD0E3"),
 		success:    lipgloss.Color("#9FE8B0"),
 		warn:       lipgloss.Color("#FFB347"),
